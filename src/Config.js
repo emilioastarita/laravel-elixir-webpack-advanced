@@ -168,7 +168,6 @@ if (isVersion()) {
         Elixir.config.versioning.buildFolder,
         Elixir.config.js.outputFolder
     );
-
     // Versioning plugin
     webpack_config.plugins.push(
         new ManifestRevisionPlugin(
@@ -176,6 +175,15 @@ if (isVersion()) {
             Elixir.config.get('public.versioning.buildFolder')
         )
     );
+    if (Elixir.config.cdn) {
+        webpack_config.output.publicPath = Elixir.config.cdn + path.join(
+            '/',
+            Elixir.config.versioning.buildFolder,
+            Elixir.config.js.outputFolder,
+            '/'
+        );
+    }
+
 }
 
 /**

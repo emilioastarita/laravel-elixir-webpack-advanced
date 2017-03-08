@@ -37,6 +37,7 @@ Elixir.extend(taskName, function (src, options, globalVars) {
         globalConfig.plugins.push(new webpack.ProvidePlugin(globalVars));
     }
 
+    const originalPublicPath = globalConfig.output.publicPath;
     // Merge options
     options = mergeWith(
         globalConfig,
@@ -52,13 +53,14 @@ Elixir.extend(taskName, function (src, options, globalVars) {
     if (isVersion()) {
         options.output.publicPath = versionPath(options.output.publicPath);
     }
-
+    if (Elixir.config.cdn) {
+        options.output.publicPath = originalPublicPath;
+    }
     /**
      * Webpack task
      */
     new Elixir.Task(taskName, function () {
         this.recordStep !== undefined && this.recordStep('Building js files');
-
         webpack(options, (err, stats) => {
             if (err) {
                 return;
